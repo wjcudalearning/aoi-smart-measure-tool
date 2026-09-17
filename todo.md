@@ -88,7 +88,7 @@ aoi_system/
 - [x] **環境與相依套件設定**
   - [x] 建立 `pyproject.toml` (相依：`pyside6`, `opencv-python`, `numpy`, `pydantic`, `pytest`, `pytest-cov`, `loguru`)
   - [x] 建立 `.venv` 虛擬環境並安裝完整相依環境
-  - [ ] 規劃 CPU / GPU 自動偵測切換機制（偵測 CUDA 可用性，自動選用 CuPy 或 NumPy）
+  - [x] 規劃 CPU / GPU 自動偵測切換機制（偵測 CUDA 可用性，自動選用 CuPy 或 NumPy） (`algorithms.backend.manager`)
 - [x] **領域資料模型設計 (`core.models`)**
   - [x] 定義強型別資料類別 (`Pydantic v2`)：
     - [x] `Point2D`, `Point2I`, `ReferenceBasis`, `BoundingRect`, `RotatedRect`
@@ -107,10 +107,10 @@ aoi_system/
 ---
 
 ### 階段二：核心演算法移植、優化與 GPU 加速 (Algorithms & Acceleration)
-- [ ] **影像前處理模組 (`algorithms.preprocess`)**
-  - [ ] 實作純 NumPy/OpenCV CPU 處理管線
-  - [ ] 實作 CuPy / OpenCV CUDA GPU 加速管線（雙門檻分割、二值化、形態學開/閉/膨脹/侵蝕）
-  - [ ] 撰寫單元測試比對 CPU 與 GPU 運算輸出的一致性
+- [x] **影像前處理模組 (`algorithms.preprocess`)**
+  - [x] 實作純 NumPy/OpenCV CPU 處理管線 (`algorithms.preprocess.filters`)
+  - [x] 實作 CuPy / OpenCV CUDA GPU 加速管線（雙門檻分割、二值化、形態學開/閉/膨脹/侵蝕）
+  - [x] 撰寫單元測試比對 CPU 與 GPU 運算輸出的一致性 (`tests.test_algorithms.test_preprocess`)
 - [ ] **基準角定位演算法 (`algorithms.corner_detection`)**
   - [ ] 移植原輪廓極值點搜尋法 (`ContourNearest`)
   - [ ] 移植旋轉矩形擬合與頂點解算 (`RotatedRect` / OpenCV `minAreaRect`)
