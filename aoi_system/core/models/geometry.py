@@ -40,3 +40,13 @@ class ReferenceBasis(BaseModel):
     unit_x: Point2D
     unit_y: Point2D
     length: float
+
+
+class ReferenceCornerCandidate(BaseModel):
+    """Candidate feature detected as reference corner."""
+
+    rotated_rect: RotatedRect
+    top_left: Point2I
+    top_right: Point2I
+    center_point: Point2I
+    bounding_rect: BoundingRect

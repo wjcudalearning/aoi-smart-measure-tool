@@ -3,6 +3,7 @@ from aoi_system.core.models.geometry import (
     Point2D,
     Point2I,
     ReferenceBasis,
+    ReferenceCornerCandidate,
     RotatedRect,
 )
 from aoi_system.core.models.measurement import (
@@ -29,6 +30,7 @@ __all__ = [
     "BoundingRect",
     "RotatedRect",
     "ReferenceBasis",
+    "ReferenceCornerCandidate",
     "MeasureDirectionMode",
     "MeasureRecord",
     "ReferenceCornerPointMode",

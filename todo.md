@@ -111,11 +111,11 @@ aoi_system/
   - [x] 實作純 NumPy/OpenCV CPU 處理管線 (`algorithms.preprocess.filters`)
   - [x] 實作 CuPy / OpenCV CUDA GPU 加速管線（雙門檻分割、二值化、形態學開/閉/膨脹/侵蝕）
   - [x] 撰寫單元測試比對 CPU 與 GPU 運算輸出的一致性 (`tests.test_algorithms.test_preprocess`)
-- [ ] **基準角定位演算法 (`algorithms.corner_detection`)**
-  - [ ] 移植原輪廓極值點搜尋法 (`ContourNearest`)
-  - [ ] 移植旋轉矩形擬合與頂點解算 (`RotatedRect` / OpenCV `minAreaRect`)
-  - [ ] 移植邊緣掃描與突起特徵定位演算法 (`ScanSearch` / `ProtrusionMode`)
-  - [ ] 實作基準角局部座標系轉換器 (`ReferenceBasis` 向量投影，實現平移與旋轉不變性)
+- [x] **基準角定位演算法 (`algorithms.corner_detection`)**
+  - [x] 移植原輪廓極值點搜尋法 (`ContourNearest`)
+  - [x] 移植旋轉矩形擬合與頂點解算 (`RotatedRect` / OpenCV `minAreaRect`)
+  - [x] 移植邊緣掃描與突起特徵定位演算法 (`ScanSearch` / `ProtrusionMode`)
+  - [x] 實作基準角局部座標系轉換器 (`ReferenceBasis` 向量投影，實現平移與旋轉不變性)
 - [ ] **尺寸量測與邊緣搜尋模組 (`algorithms.measurement`)**
   - [ ] 實作給定兩點或局部座標的邊緣梯度搜尋（次像素邊緣偵測）
   - [ ] 實作「平行量測 (Parallel)」與「垂直量測 (Perpendicular)」投影距離計算法
