@@ -20,7 +20,7 @@ QMainWindow, QWidget {{
     background-color: {COLOR_BG_DARK};
     color: {COLOR_TEXT_PRIMARY};
     font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif;
-    font-size: 13px;
+    font-size: 10pt;
 }}
 
 QFrame#cardPanel {{

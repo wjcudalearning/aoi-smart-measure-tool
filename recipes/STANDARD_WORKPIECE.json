@@ -1,0 +1,204 @@
+{
+  "product_key": "STANDARD_WORKPIECE",
+  "tasks": [
+    {
+      "task_id": "task_preprocess",
+      "task_type": "PreprocessTask",
+      "enabled": true,
+      "parameters": {
+        "threshold": 120,
+        "output_key": "binary_prep"
+      }
+    },
+    {
+      "task_id": "task_corner",
+      "task_type": "CornerAlignmentTask",
+      "enabled": true,
+      "parameters": {
+        "roi": {
+          "x": 100,
+          "y": 80,
+          "width": 200,
+          "height": 200
+        }
+      }
+    },
+    {
+      "task_id": "task_measure_width",
+      "task_type": "LineMeasureTask",
+      "enabled": true,
+      "parameters": {
+        "start_x": 150,
+        "start_y": 200,
+        "end_x": 650,
+        "end_y": 200,
+        "measure_name": "Width_L1"
+      }
+    },
+    {
+      "task_id": "task_defect",
+      "task_type": "BlobDefectTask",
+      "enabled": true,
+      "parameters": {
+        "min_area": 30,
+        "max_area": 5000,
+        "defect_name": "surface_blemish"
+      }
+    },
+    {
+      "task_id": "task_judge",
+      "task_type": "ToleranceJudgementTask",
+      "enabled": true,
+      "parameters": {
+        "rules": [
+          {
+            "name": "Width_L1",
+            "spec": "24.50~25.50"
+          }
+        ]
+      }
+    }
+  ],
+  "preprocess_snapshots": [
+    {
+      "enabled": true,
+      "threshold": 120,
+      "upper_threshold": 255,
+      "use_dual_threshold": false,
+      "erode_iterations": 0,
+      "dilate_iterations": 0,
+      "open_iterations": 0,
+      "close_iterations": 1
+    },
+    {
+      "enabled": false,
+      "threshold": 128,
+      "upper_threshold": 255,
+      "use_dual_threshold": false,
+      "erode_iterations": 0,
+      "dilate_iterations": 0,
+      "open_iterations": 0,
+      "close_iterations": 0
+    },
+    {
+      "enabled": false,
+      "threshold": 128,
+      "upper_threshold": 255,
+      "use_dual_threshold": false,
+      "erode_iterations": 0,
+      "dilate_iterations": 0,
+      "open_iterations": 0,
+      "close_iterations": 0
+    },
+    {
+      "enabled": false,
+      "threshold": 128,
+      "upper_threshold": 255,
+      "use_dual_threshold": false,
+      "erode_iterations": 0,
+      "dilate_iterations": 0,
+      "open_iterations": 0,
+      "close_iterations": 0
+    }
+  ],
+  "dual_threshold": {
+    "enabled": false,
+    "lower_threshold": 50,
+    "upper_threshold": 200,
+    "erode_iterations": 0,
+    "dilate_iterations": 0,
+    "open_iterations": 0,
+    "close_iterations": 0
+  },
+  "reference_corner": {
+    "enabled": true,
+    "source_index": 0,
+    "point_mode": 0,
+    "scan_line_threshold": 128,
+    "roi": {
+      "x": 100,
+      "y": 80,
+      "width": 200,
+      "height": 200
+    },
+    "roi_saved": false,
+    "corner_found": false
+  },
+  "measure_records": [
+    {
+      "start_point": {
+        "x": 100,
+        "y": 200
+      },
+      "end_point": {
+        "x": 720,
+        "y": 200
+      },
+      "center_point": {
+        "x": 0,
+        "y": 0
+      },
+      "local_start_point": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "local_end_point": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "distance": 0.0,
+      "source_name": "Preprocess 1",
+      "direction": "Parallel",
+      "status_text": ""
+    },
+    {
+      "start_point": {
+        "x": 300,
+        "y": 80
+      },
+      "end_point": {
+        "x": 300,
+        "y": 480
+      },
+      "center_point": {
+        "x": 0,
+        "y": 0
+      },
+      "local_start_point": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "local_end_point": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "distance": 0.0,
+      "source_name": "Preprocess 1",
+      "direction": "Perpendicular",
+      "status_text": ""
+    }
+  ],
+  "judgement_rules": [
+    {
+      "name": "Width_L1",
+      "calc_expression": "(1)",
+      "spec_expression": "24.50~25.50",
+      "calc_expression_b": "(1)",
+      "spec_expression_b": "24.00~26.00"
+    },
+    {
+      "name": "Height_L2",
+      "calc_expression": "(2)",
+      "spec_expression": "15.50~16.50",
+      "calc_expression_b": "(2)",
+      "spec_expression_b": "15.00~17.00"
+    }
+  ],
+  "calibration": {
+    "camera_name": "DefaultCamera",
+    "usage_name": "Inspection",
+    "ccd_x_precision": 0.05,
+    "ccd_y_precision": 0.05,
+    "measurement_scale_factor": 1.0
+  }
+}

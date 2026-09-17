@@ -1,4 +1,5 @@
 from enum import StrEnum
+from typing import Any
 
 from PySide6.QtWidgets import (
     QComboBox,
@@ -18,6 +19,23 @@ class UserRole(StrEnum):
     ENGINEER = "工程師 (Engineer)"
     ADMINISTRATOR = "系統管理員 (Admin)"
 
+    @classmethod
+    def from_value(cls, val: Any) -> "UserRole":
+        if isinstance(val, cls):
+            return val
+        if val is None:
+            return cls.OPERATOR
+        val_str = str(val).strip()
+        for item in cls:
+            if item.value == val_str or item.name == val_str:
+                return item
+        # Fallback partial match
+        if "admin" in val_str.lower() or "管理員" in val_str:
+            return cls.ADMINISTRATOR
+        if "engineer" in val_str.lower() or "工程師" in val_str:
+            return cls.ENGINEER
+        return cls.OPERATOR
+
 
 class RoleSwitchDialog(QDialog):
     """Security dialog for switching between Operator, Engineer, and Admin roles."""
@@ -29,12 +47,12 @@ class RoleSwitchDialog(QDialog):
     }
 
     def __init__(
-        self, current_role: UserRole = UserRole.OPERATOR, parent: QWidget | None = None
+        self, current_role: UserRole | str = UserRole.OPERATOR, parent: QWidget | None = None
     ) -> None:
         super().__init__(parent)
         self.setWindowTitle("切換操作權限 (Role Switcher)")
         self.setFixedSize(320, 200)
-        self.selected_role: UserRole = current_role
+        self.selected_role: UserRole = UserRole.from_value(current_role)
 
         layout = QVBoxLayout(self)
         layout.setSpacing(12)
@@ -43,8 +61,8 @@ class RoleSwitchDialog(QDialog):
         role_label = QLabel("選擇身分:")
         self.combo = QComboBox()
         for role in UserRole:
-            self.combo.addItem(role.value, role)
-        self.combo.setCurrentText(current_role.value)
+            self.combo.addItem(role.value, role.value)
+        self.combo.setCurrentText(self.selected_role.value)
         role_layout.addWidget(role_label)
         role_layout.addWidget(self.combo)
         layout.addLayout(role_layout)
@@ -72,7 +90,7 @@ class RoleSwitchDialog(QDialog):
         layout.addLayout(btn_layout)
 
     def _on_role_changed(self) -> None:
-        role = self.combo.currentData()
+        role = UserRole.from_value(self.combo.currentText())
         if role == UserRole.OPERATOR:
             self.pwd_input.setEnabled(False)
             self.pwd_input.clear()
@@ -80,7 +98,7 @@ class RoleSwitchDialog(QDialog):
             self.pwd_input.setEnabled(True)
 
     def _validate_and_accept(self) -> None:
-        target_role: UserRole = self.combo.currentData()
+        target_role = UserRole.from_value(self.combo.currentText())
         required_pwd = self.PASSWORDS.get(target_role, "")
 
         if required_pwd:

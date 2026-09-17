@@ -44,6 +44,7 @@ class MainWindow(QMainWindow):
         self._setup_ui()
         self._setup_connections()
         self._on_role_changed(self.main_vm.current_role)
+        self._on_recipe_changed(self.main_vm.active_recipe)
 
     def _setup_ui(self) -> None:
         central_widget = QWidget()
@@ -185,10 +186,11 @@ class MainWindow(QMainWindow):
         self.main_vm.recipe_changed.connect(self._on_recipe_changed)
         self.main_vm.status_message.connect(self.status_bar.showMessage)
 
-    def _on_role_changed(self, role: UserRole) -> None:
-        self.label_role.setText(f"身分: {role.value}")
+    def _on_role_changed(self, role: UserRole | str) -> None:
+        role_obj = UserRole.from_value(role)
+        self.label_role.setText(f"身分: {role_obj.value}")
         # Restrict UI tabs if Operator
-        is_operator = role == UserRole.OPERATOR
+        is_operator = role_obj == UserRole.OPERATOR
         self.btn_nav_preprocess.setEnabled(not is_operator)
         self.btn_nav_corner.setEnabled(not is_operator)
         self.btn_nav_recipe.setEnabled(not is_operator)

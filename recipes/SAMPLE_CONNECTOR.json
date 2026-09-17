@@ -1,0 +1,113 @@
+{
+  "product_key": "SAMPLE_CONNECTOR",
+  "tasks": [],
+  "preprocess_snapshots": [
+    {
+      "enabled": true,
+      "threshold": 100,
+      "upper_threshold": 255,
+      "use_dual_threshold": false,
+      "erode_iterations": 0,
+      "dilate_iterations": 0,
+      "open_iterations": 0,
+      "close_iterations": 0
+    },
+    {
+      "enabled": false,
+      "threshold": 128,
+      "upper_threshold": 255,
+      "use_dual_threshold": false,
+      "erode_iterations": 0,
+      "dilate_iterations": 0,
+      "open_iterations": 0,
+      "close_iterations": 0
+    },
+    {
+      "enabled": false,
+      "threshold": 128,
+      "upper_threshold": 255,
+      "use_dual_threshold": false,
+      "erode_iterations": 0,
+      "dilate_iterations": 0,
+      "open_iterations": 0,
+      "close_iterations": 0
+    },
+    {
+      "enabled": false,
+      "threshold": 128,
+      "upper_threshold": 255,
+      "use_dual_threshold": false,
+      "erode_iterations": 0,
+      "dilate_iterations": 0,
+      "open_iterations": 0,
+      "close_iterations": 0
+    }
+  ],
+  "dual_threshold": {
+    "enabled": false,
+    "lower_threshold": 50,
+    "upper_threshold": 200,
+    "erode_iterations": 0,
+    "dilate_iterations": 0,
+    "open_iterations": 0,
+    "close_iterations": 0
+  },
+  "reference_corner": {
+    "enabled": true,
+    "source_index": 0,
+    "point_mode": 0,
+    "scan_line_threshold": 128,
+    "roi": {
+      "x": 50,
+      "y": 50,
+      "width": 150,
+      "height": 150
+    },
+    "roi_saved": false,
+    "corner_found": false
+  },
+  "measure_records": [
+    {
+      "start_point": {
+        "x": 80,
+        "y": 100
+      },
+      "end_point": {
+        "x": 480,
+        "y": 100
+      },
+      "center_point": {
+        "x": 0,
+        "y": 0
+      },
+      "local_start_point": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "local_end_point": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "distance": 0.0,
+      "source_name": "Preprocess 1",
+      "direction": "Parallel",
+      "status_text": ""
+    }
+  ],
+  "judgement_rules": [
+    {
+      "name": "Pitch_Span",
+      "calc_expression": "(1)",
+      "spec_expression": "19.80~20.20",
+      "calc_expression_b": "",
+      "spec_expression_b": ""
+    }
+  ],
+  "calibration": {
+    "camera_name": "DefaultCamera",
+    "usage_name": "Inspection",
+    "ccd_x_precision": 0.05,
+    "ccd_y_precision": 0.05,
+    "measurement_scale_factor": 1.0
+  }
+}

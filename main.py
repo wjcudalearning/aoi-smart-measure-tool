@@ -17,10 +17,16 @@ def main() -> None:
     )
 
     app = QApplication(sys.argv)
+    font = app.font()
+    font.setFamily("Segoe UI")
+    font.setPointSize(10)
+    app.setFont(font)
+
     app.setApplicationName("AOI Smart Measure Tool")
     app.setOrganizationName("AOI Vision AI")
 
     window = MainWindow()
+
     window.show()
 
     sys.exit(app.exec())

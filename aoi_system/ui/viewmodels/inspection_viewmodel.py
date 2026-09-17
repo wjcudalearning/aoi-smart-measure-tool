@@ -23,8 +23,19 @@ class InspectionViewModel(QObject):
         self._is_running = False
 
         # Cameras for each slot
+        from pathlib import Path
+
+        sample_folder = Path("sample_data/images")
+        folder = sample_folder if sample_folder.is_dir() else None
         self.cameras: dict[int, SimulatedCamera] = {
-            i: SimulatedCamera(device_id=f"SIM_CAM_{i}", name=f"Slot {i} Camera", fps=20.0)
+            i: SimulatedCamera(
+                device_id=f"SIM_CAM_{i}",
+                name=f"Slot {i} Camera",
+                width=800,
+                height=600,
+                fps=20.0,
+                image_folder=folder,
+            )
             for i in range(ContinuousInspectionOrchestrator.NUM_SLOTS)
         }
 

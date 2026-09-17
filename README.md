@@ -70,9 +70,10 @@
 | :--- | :--- | :--- | :---: |
 | **總吞吐量 (Throughput)** | **523.63 FPS** | $\ge 60\text{ FPS}$ | 🚀 **超過 8.7 倍** |
 | **單張平均延遲 (Latency)** | **1.86 ms** | $\le 16.6\text{ ms}$ | ⚡ **極致微秒級響應** |
-| **單元測試通過率** | **100% (72/72 Passed)** | 100% | ✅ **通過** |
-| **程式碼測試覆蓋率** | **83.6%** | $\ge 80\%$ | ✅ **達標** |
+| **單元測試通過率** | **100% (79/79 Passed)** | 100% | ✅ **通過** |
+| **程式碼測試覆蓋率** | **85.1%** | $\ge 80\%$ | ✅ **達標** |
 | **代碼靜態檢查** | **Ruff & Mypy Strict 0 Errors** | 0 Warning | ✅ **零缺陷** |
+
 
 ---
 
@@ -144,15 +145,19 @@ aoi-smart-measure-tool/
 │   ├── pipeline/               # 3-Slot 連續檢測協調器與工作佇列
 │   ├── storage/                # 配方儲存 (JSON) 與舊版 INI 遷移器
 │   └── ui/                     # PySide6 現代工業深色主題與視圖
-├── tests/                      # 單元測試套件 (涵蓋率 82%)
+├── tests/                      # 單元測試套件 (涵蓋率 85.1%)
 │   ├── test_algorithms/        # 演算法精度與黃金樣本比對
 │   ├── test_core/              # 局部座標轉換與模型測試
 │   ├── test_performance/       # 吞吐量與延遲基準測試
 │   ├── test_pipeline/          # 多通道並行管線測試
+│   ├── test_simulation_e2e.py  # 全流程模擬與相機驅動端到端測試
 │   ├── test_storage/           # 配方持久化與 INI 解析測試
 │   └── test_ui/                # PySide6 元件與視圖測試
-├── scripts/                    # 輔助腳本 (壓測工具、PyInstaller 打包)
+├── recipes/                    # 出廠預設檢測配方庫 (JSON)
+├── sample_data/images/         # 工業檢測黃金測試圖庫 (標準良品/尺寸超規/表面瑕疵/旋轉偏移)
+├── scripts/                    # 輔助腳本 (壓測工具、PyInstaller 打包、配方生成)
 ├── main.py                     # 主程式入口
+
 ├── run.bat / run.ps1           # 一鍵啟動腳本
 ├── pyproject.toml              # 現代專案配置與依賴清單
 └── README.md                   # 系統詳細使用手冊

@@ -150,12 +150,16 @@ class LiveInspectionView(QWidget):
         self.btn_start.setObjectName("primaryButton")
         self.btn_start.clicked.connect(self.viewmodel.start_all)
 
+        self.btn_simulate = QPushButton("🧪 模擬單次檢測 (Simulate Step)")
+        self.btn_simulate.clicked.connect(self._on_simulate_all)
+
         self.btn_stop = QPushButton("⏹ 停止檢測")
         self.btn_stop.clicked.connect(self.viewmodel.stop_all)
         self.btn_stop.setEnabled(False)
 
         bar_layout.addWidget(title)
         bar_layout.addStretch()
+        bar_layout.addWidget(self.btn_simulate)
         bar_layout.addWidget(self.btn_start)
         bar_layout.addWidget(self.btn_stop)
         layout.addWidget(bar)
@@ -193,3 +197,8 @@ class LiveInspectionView(QWidget):
     def _on_yield(self, slot: int, stats: dict[str, int]) -> None:
         if slot in self.slot_cards:
             self.slot_cards[slot].update_yield(stats)
+
+    def _on_simulate_all(self) -> None:
+        """Triggers a simulated single inspection step across all 3 slots."""
+        for slot in range(3):
+            self.viewmodel.trigger_single_step(slot)

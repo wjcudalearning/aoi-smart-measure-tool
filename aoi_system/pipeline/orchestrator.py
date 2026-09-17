@@ -161,22 +161,44 @@ class ContinuousInspectionOrchestrator:
             start_pt = rec.start_point
             end_pt = rec.end_point
 
-            if rec.direction in (MeasureDirectionMode.PARALLEL, MeasureDirectionMode.PERPENDICULAR):
-                dist = self.measurer.compute_projected_distance(
-                    start_pt,
-                    end_pt,
-                    rec.direction,
-                    basis,
-                    recipe.calibration,
-                )
+            # First detect actual workpiece edges along the scan line
+            line_res = self.measurer.analyze_line_measurement(
+                src_img,
+                start_pt,
+                end_pt,
+                recipe.calibration,
+            )
+
+            if line_res.is_valid:
+                p_first = line_res.first_point
+                p_last = line_res.last_point
+                if rec.direction in (
+                    MeasureDirectionMode.PARALLEL,
+                    MeasureDirectionMode.PERPENDICULAR,
+                ):
+                    dist = self.measurer.compute_projected_distance(
+                        p_first,
+                        p_last,
+                        rec.direction,
+                        basis,
+                        recipe.calibration,
+                    )
+                else:
+                    dist = line_res.millimeter_distance
             else:
-                line_res = self.measurer.analyze_line_measurement(
-                    src_img,
-                    start_pt,
-                    end_pt,
-                    recipe.calibration,
-                )
-                dist = line_res.millimeter_distance
+                if rec.direction in (
+                    MeasureDirectionMode.PARALLEL,
+                    MeasureDirectionMode.PERPENDICULAR,
+                ):
+                    dist = self.measurer.compute_projected_distance(
+                        start_pt,
+                        end_pt,
+                        rec.direction,
+                        basis,
+                        recipe.calibration,
+                    )
+                else:
+                    dist = 0.0
 
             line_values[idx] = dist
 
