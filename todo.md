@@ -141,21 +141,21 @@ aoi_system/
   - [x] 支援檢測記錄自訂欄位匯出為 CSV 與 Excel 格式
 
 ### 階段六：標準視覺算子庫 (Pluggable Vision Operators)
-- [ ] **影像前處理算子 (`pipeline.tasks.PreprocessTask`)**
-  - [ ] 支援多後端單門檻、雙門檻分割與自訂形態學組合
-- [ ] **定位配準算子 (`pipeline.tasks.CornerAlignmentTask`, `TemplateMatchTask`)**
-  - [ ] 基準角定位 (`ContourNearest`, `RoiTopEdge`, `ScanSearch`)
-  - [ ] 模板匹配定位 (Normalized Cross-Correlation)
-- [ ] **幾何尺寸量測算子 (`LineMeasureTask`, `PointToLineTask`, `CircleFitTask`)**
-  - [ ] 次像素邊緣直線量測與平行/垂直投影距離
-  - [ ] 點到直線最短距離量測
-  - [ ] 最小平方法圓孔孔徑與同心度擬合 (Circle Fit)
-- [ ] **表面瑕疵檢測算子 (`pipeline.tasks.BlobDefectTask`)**
-  - [ ] 連通域面積、周長、圓度與深淺斑點瑕疵分析
-- [ ] **安全公差評判算子 (`pipeline.tasks.ToleranceJudgementTask`)**
-  - [ ] 基於安全 AST 求解各尺寸公差，執行 A/B/NG 階層判定
-- [ ] **PLC 訊號發送算子 (`pipeline.tasks.PlcPublishTask`)**
-  - [ ] 將當前結果自動透過通訊後端發布至外部產線設備
+- [x] **影像前處理算子 (`pipeline.tasks.PreprocessTask`)**
+  - [x] 支援多後端單門檻、雙門檻分割與自訂形態學組合
+- [x] **定位配準算子 (`pipeline.tasks.CornerAlignmentTask`, `TemplateMatchTask`)**
+  - [x] 基準角定位 (`ContourNearest`, `RoiTopEdge`, `ScanSearch`)
+  - [x] 模板匹配定位 (Normalized Cross-Correlation)
+- [x] **幾何尺寸量測算子 (`LineMeasureTask`, `PointToLineTask`, `CircleFitTask`)**
+  - [x] 次像素邊緣直線量測與平行/垂直投影距離
+  - [x] 點到直線最短距離量測
+  - [x] 最小平方法圓孔孔徑與同心度擬合 (Circle Fit)
+- [x] **表面瑕疵檢測算子 (`pipeline.tasks.BlobDefectTask`)**
+  - [x] 連通域面積、周長、圓度與深淺斑點瑕疵分析
+- [x] **安全公差評判算子 (`pipeline.tasks.ToleranceJudgementTask`)**
+  - [x] 基於安全 AST 求解各尺寸公差，執行 A/B/NG 階層判定
+- [x] **PLC 訊號發送算子 (`pipeline.tasks.PlcPublishTask`)**
+  - [x] 將當前結果自動透過通訊後端發布至外部產線設備
 
 ### 階段七：現代化 Studio UI 重構 (動態工作流與算子調試)
 - [ ] **三通道即時檢測儀表板 (`ui.views.live_inspection_view`)**

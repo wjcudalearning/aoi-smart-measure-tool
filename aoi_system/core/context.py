@@ -10,8 +10,11 @@ class InspectionContext:
     """Blackboard architecture carrying images, extracted features, and results across tasks."""
 
     slot_index: int = 0
+    frame_id: int = 0
     raw_image: np.ndarray | None = None
     timestamp: float = field(default_factory=time.time)
+    reference_basis: Any = None
+    overall_grade: str = "NG"
     images: dict[str, np.ndarray] = field(default_factory=dict)
     features: dict[str, Any] = field(default_factory=dict)
     measurements: dict[str, float] = field(default_factory=dict)
