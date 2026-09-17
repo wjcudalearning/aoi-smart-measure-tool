@@ -1,23 +1,23 @@
-# AOI 智慧尺寸量測與檢測系統 (Python 重構規劃)
+# AOI 智慧尺寸量測與檢測系統 (現代化解耦任務引擎與完整後端矩陣)
 
-本專案旨在將原 C# .NET Framework 4.7.2 WinForms AOI 系統（`AoiMeasureTool`）全面重構為基於 **Python 3.10+、PySide6 (Qt6) 與 GPU 加速** 的現代化工業級檢測軟體。
+本專案旨在將原 C# .NET Framework 4.7.2 WinForms AOI 系統（`AoiMeasureTool`）全面重構為基於 **Python 3.12+、PySide6 (Qt6)、GPU 加速 (CUDA / CuPy) 與動態可插拔算子引擎 (Pluggable Vision Task Engine)** 的工業級檢測軟體。
 
 ---
 
-## 🎯 重構核心目標
+## 🎯 重構核心目標與解耦架構
 
-1. **架構重塑 (Clean OOP / DDD / MVVM)**：
-   - 徹底打破原 C# `MainForm` 超過 7,000 行的「上帝物件 (God Object)」結構。
-   - 將 **演算法 (Algorithms)**、**業務領域 (Domain/Core)**、**相機硬體抽象 (Hardware/Camera)**、**配方儲存 (Persistence)** 與 **介面展示 (UI/UX)** 完全解耦。
-2. **GPU 加速與高吞吐量 (GPU Acceleration & High Throughput)**：
-   - 支援 GPU 影像前處理（二值化、雙門檻分割、形態學運算、邊緣提取）。
-   - 採用 **CUDA / CuPy / OpenCV-CUDA / ONNX Runtime (DirectML/CUDA)** 雙後端（具備 GPU 加速時自動啟用，無 GPU 時無縫退回 CPU/NumPy）。
-3. **現代化工業級 UI/UX (Modern Industrial UI)**：
-   - 基於 **PySide6 (Qt 6)** + 現代暗色工業風格（如 QFluentWidgets / Modern Dark）。
-   - 採用 `QGraphicsView` / `QOpenGLWidget` 實現硬體加速的超流暢百萬級像素平移、縮放、ROI 拖拉與即時量測標註 (Overlay)。
-   - 改善操作員/工程師/管理者的切換體驗與配方 (Recipe) 編輯工作流。
-4. **模組演算法完整繼承與強化 (Algorithm Preservation & Enhancement)**：
-   - 完整移植並單元測試化驗證原系統的精華演算法：**基準角特徵定位 (`ReferenceBasis`)**、**工件本體局部座標轉換**、**平行/垂直量測線投影**、**A/B/NG 公差評級引擎**。
+1. **算子任務與管線徹底解耦 (Pluggable Vision Task Architecture)**：
+   - 捨棄固定硬編碼的程序式流程，改採 **Blackboard 上下文模式 (`InspectionContext`)** 與 **動態任務鏈 (`list[VisionTask]`)**。
+   - 所有視覺工具（前處理、定位、量測、瑕疵、評判、PLC輸出）皆為獨立可插拔的 Task，支援動態組合與自由擴充。
+2. **五大後端基礎設施矩陣 (Full Backend Matrix)**：
+   - **運算加速後端**：OpenCV-CUDA (`GpuMat`, Streams)、CuPy GPU 並行、CPU NumPy SIMD、ONNX Runtime。
+   - **硬體相機驅動後端 (HAL)**：標準 OpenCV USB/DirectShow 相機、海康 (Hikrobot MVS)、巴斯勒 (Basler Pylon)、目錄模擬相機。
+   - **工業自動化通訊後端**：Modbus TCP、TCP/IP ASCII Socket、硬體/軟體觸發排程器。
+   - **生產歷史資料庫後端**：SQLite 非同步寫入佇列、CPK/良率分析、CSV/Excel 匯出。
+   - **算子演算法庫後端**：單雙門檻形態學、基準角與模板匹配、直線/點線/圓孔擬合量測、瑕疵斑點分析、安全 AST 評判。
+3. **現代化工業級 UI/UX (PySide6 / Qt6)**：
+   - 硬體加速 Viewport (`QGraphicsView`) 支援 60FPS 平移縮放與多圖層疊加。
+   - 3 通道即時檢測儀表板、動態算子調校工作區、歷史分析趨勢圖。
 
 ---
 
@@ -25,165 +25,150 @@
 
 ```text
 aoi_system/
-├── core/                       # 核心領域層 (純 Python / NumPy，無 UI 相依)
-│   ├── models/                 # 資料實體 (Recipe, MeasureRecord, JudgementRule, etc.)
-│   ├── coordinates.py          # 工件局部座標系轉換 (ReferenceBasis, 仿射變換)
-│   └── events.py               # 事件匯流排 / 訊號定義
+├── core/                           # 核心領域層 (純 Python / NumPy / Pydantic)
+│   ├── models/                     # 資料實體 (幾何、配方、結果、公差)
+│   ├── context.py                  # InspectionContext 黑板上下文
+│   ├── coordinates.py              # 工件本體局部座標轉換 (ReferenceBasis)
+│   └── logger.py                   # Loguru 集中非同步日誌
 │
-├── algorithms/                 # 核心影像處理與量測演算法 (支援 GPU/CPU 雙模式)
-│   ├── backend/                # 運算後端封裝 (NumPy / CuPy / cv2.cuda)
-│   ├── preprocess/             # 影像前處理 (二值化、雙門檻、形態學開閉膨脹侵蝕)
-│   ├── corner_detection/       # 基準角定位 (輪廓、RotatedRect、邊緣掃描、突起模式)
-│   ├── measurement/            # 尺寸量測 (次像素邊緣檢測、垂直/平行距離投影計算)
-│   └── judgement/              # 公差評判引擎 (安全 AST 表達式求值、A/B/NG 規則)
+├── algorithms/                     # 核心演算法與運算後端
+│   ├── backend/                    # 運算後端封裝 (NumPy / CuPy / OpenCV-CUDA / ONNX)
+│   ├── preprocess/                 # 影像前處理濾波器 (CPU / GPU 雙實作)
+│   ├── alignment/                  # 定位與配準 (基準角、旋轉矩形、模板匹配)
+│   ├── measurement/                # 尺寸量測 (次像素直線、點線距、圓孔擬合)
+│   ├── defect/                     # 表面瑕疵分析 (斑點分析 Blob、差分遮罩)
+│   └── judgement/                  # 公差評判引擎 (安全 AST 表達式求值)
 │
-├── hardware/                   # 硬體設備抽象層 (HAL)
-│   ├── camera_base.py          # 相機抽象介面
-│   ├── opencv_camera.py        # 虛擬/檔案/USB 相機
-│   └── gige_camera.py          # 工業 GigE / USB3 相機 (如 Basler, Hikvision 等 SDK 介接)
+├── pipeline/                       # 檢測管線與任務調度 (Task Engine)
+│   ├── tasks/                      # 算子任務抽象與實作 (Preprocess, Align, Measure, Judge, PLC)
+│   ├── runner.py                   # 動態任務鏈執行器 (TaskPipelineRunner)
+│   ├── slot_worker.py              # 獨立 Slot 背景工作執行緒與佇列隔離
+│   └── orchestrator.py             # 3-Slot 連續檢測協調器
 │
-├── pipeline/                   # 檢測管線與排程 (Multi-slot Concurrency)
-│   ├── inspection_worker.py    # 獨立 Slot 檢測工作執行緒
-│   ├── queue_manager.py        # 無鎖/安全佇列管理
-│   └── orchestrator.py         # 連續檢測協調器 (3-Slot 並行處理)
+├── hardware/                       # 硬體設備抽象層 (HAL)
+│   ├── camera_base.py              # 相機抽象介面 (CameraDevice)
+│   ├── opencv_camera.py            # 標準 USB / DirectShow 相機驅動
+│   ├── hikrobot_camera.py          # 海康 MVS SDK 相機驅動
+│   ├── basler_camera.py            # 巴斯勒 Pylon SDK 相機驅動
+│   └── simulated_camera.py         # 本機圖檔/合成訊號模擬相機
 │
-├── storage/                    # 持久化層
-│   ├── config_manager.py       # 系統全域設定 (YAML / JSON)
-│   ├── recipe_repository.py    # 配方管理 (SQLite / JSON)
-│   └── legacy_migrator.py      # 原 .ini (setting.ini, parameterReferenceList.ini) 轉換工具
+├── communication/                  # 工業通訊與觸發層
+│   ├── modbus_client.py            # Modbus TCP 通訊客戶端 (PLC 互動)
+│   ├── tcp_socket.py               # TCP/IP ASCII Socket 通訊服務端
+│   └── trigger_dispatcher.py       # 硬體/軟體/網路觸發排程器
 │
-└── ui/                         # 表現層 (PySide6 / Qt6)
-    ├── components/             # 通用元件 (QGraphicsView 視窗、自訂滑桿、數值顯示卡)
-    ├── viewmodels/             # MVVM ViewModel 層 (狀態與事件繫結)
-    ├── views/                  # 畫面檢視
-    │   ├── main_window.py      # 主視窗與現代化側欄導航
-    │   ├── live_inspection.py  # 3-Slot 連續檢測工作區
-    │   ├── recipe_editor.py    # 檢測配方與主/子參數關聯編輯
-    │   ├── preprocess_view.py  # 影像前處理調校 (即時視覺化直方圖與效果)
-    │   ├── corner_view.py      # 基準角標定工作區
-    │   └── measure_view.py     # 量測線標定與多圖確認
-    └── resources/              # 樣式表 (QSS)、圖標 (Icons)、字型
+├── storage/                        # 持久化與歷史分析層
+│   ├── database/                   # SQLite 非同步資料庫 (檢測歷程、良率、統計)
+│   ├── recipe_repository.py        # 結構化動態配方儲存 (JSON)
+│   ├── legacy_migrator.py          # 舊版 INI 轉換至動態任務鏈相容模組
+│   └── exporter.py                 # CSV / Excel 報表匯出引擎
+│
+└── ui/                             # 表現層 (PySide6 / Qt6 MVVM)
+    ├── components/                 # 通用元件 (QGraphicsView 視圖、KPI 卡片、權限切換)
+    ├── viewmodels/                 # MVVM ViewModel 層
+    └── views/                      # 檢視畫面 (即時檢測、算子調校、配方編輯、歷程分析)
 ```
 
 ---
 
 ## 📋 重構任務規劃清單 (TODO Checklist)
 
-### 階段零：Agent 協同基礎設施建置 (已完成 ✅)
-- [x] **建立專案頂層指南 (`AGENTS.md`)**：規範架構分層、OOP 原則、GPU 雙後端策略、程式風格與名詞定義。
-- [x] **建立專屬 Workspace Skills (`.agents/skills/`)**：
-  - [x] `aoi-algorithm-benchmark`：演算法精度微米級比對與 CPU/GPU 效能基準測試。
-  - [x] `aoi-recipe-migrator`：舊版 C# INI 配方解析、校驗與現代化結構轉換。
-  - [x] `aoi-cuda-profiler`：RTX 3090 GPU 環境診斷、VRAM 監控與延遲分析。
-  - [x] `aoi-tdd-workflow`：TDD (Red-Green-Refactor) 測試驅動開發標準流程。
-- [x] **建立 GitHub Actions CI 自動化工作流 (`.github/workflows/ci.yml`)**：
-  - [x] 涵蓋 Ubuntu / Windows 雙平台矩陣測試。
-  - [x] 整合 Ruff (代碼格式/檢查)、Mypy (型別檢查) 與 Pytest (涵蓋率 >= 80% 門檻)。
-- [x] **建立專屬 Subagents**：
-  - [x] `algo_specialist`：演算法與 GPU/CUDA 加速專家。
-  - [x] `ui_ux_architect`：PySide6 現代 UI 與硬體加速 Viewport 設計師。
-  - [x] `qa_benchmark_agent`：數值精度與壓力測試工程師。
+### 階段零：環境、標準與 CI/CD 基礎設施 (已完成 ✅)
+- [x] 建立專案指南與架構原則 (`AGENTS.md`)
+- [x] 建立專屬 Workspace Skills (`aoi-algorithm-benchmark`, `aoi-recipe-migrator`, `aoi-cuda-profiler`, `aoi-tdd-workflow`)
+- [x] 建立 GitHub Actions CI 自動化工作流 (`.github/workflows/ci.yml`)
+- [x] 建立專屬 Subagents (`algo_specialist`, `ui_ux_architect`, `qa_benchmark_agent`)
+- [x] 建立虛擬環境與套件依賴 (`pyproject.toml`)
 
-### 階段一：底層架構設計與基礎設施建置 (Foundation & Clean Architecture)
-- [x] **環境與相依套件設定**
-  - [x] 建立 `pyproject.toml` (相依：`pyside6`, `opencv-python`, `numpy`, `pydantic`, `pytest`, `pytest-cov`, `loguru`)
-  - [x] 建立 `.venv` 虛擬環境並安裝完整相依環境
-  - [x] 規劃 CPU / GPU 自動偵測切換機制（偵測 CUDA 可用性，自動選用 CuPy 或 NumPy） (`algorithms.backend.manager`)
-- [x] **領域資料模型設計 (`core.models`)**
-  - [x] 定義強型別資料類別 (`Pydantic v2`)：
-    - [x] `Point2D`, `Point2I`, `ReferenceBasis`, `BoundingRect`, `RotatedRect`
-    - [x] `MeasureRecord`（起訖點、局部座標、量測方向、公差）
-    - [x] `ReferenceCornerSnapshot`（ROI、演算法模式、頂點、方向角）
-    - [x] `PreprocessSnapshot`, `DualThresholdSnapshot`（單/雙門檻值、形態學運算參數）
-    - [x] `JudgementCriterionRule`（A/B/NG 規則、表達式、上下限規格）
-    - [x] `InspectionRecipe`（完整產品檢測配方）
-    - [x] `CameraCalibration`（CCD X/Y 精度、物理縮放係數）
-    - [x] `ContinuousInspectionResult`, `ContinuousInspectionRuleResult`（檢測結果實體）
-  - [x] 實作工件局部座標系轉換 (`core.coordinates`) 並以 TDD 測試通過 (涵蓋率 99%)
-- [x] **配方持久化與舊版 INI 相容工具 (`storage`)**
-  - [x] 採用現代結構化儲存格式（JSON），取代雜亂的 INI 檔案 (`storage.recipe_repository`)
-  - [x] 撰寫 `legacy_migrator.py`：能自動讀取原系統的 `setting.ini`、`parameterReferenceList.ini`、`innerSetting.ini`，一鍵匯入為新系統配方 (單元測試涵蓋率 94%)
+### 階段一：黑板上下文與動態任務管線引擎 (`pipeline.tasks` & `core.context`)
+- [ ] **黑板上下文架構 (`core.context.InspectionContext`)**
+  - [ ] 支援動態儲存原圖與各階段中間處理影像 (`images: dict[str, np.ndarray]`)
+  - [ ] 支援幾何特徵與座標基底註冊 (`features: dict[str, Any]`)
+  - [ ] 支援量測數值與公差判定收集 (`measurements: dict[str, float]`)
+  - [ ] 支援異常與日誌收集 (`anomalies: list[str]`)
+- [ ] **視覺算子任務抽象合約 (`pipeline.tasks.base.VisionTask`)**
+  - [ ] 定義標準 `execute(ctx: InspectionContext) -> TaskResult` 介面
+  - [ ] 支援任務啟用/禁用、執行耗時統計與例外捕獲
+- [ ] **任務註冊工廠 (`pipeline.tasks.registry.TaskRegistry`)**
+  - [ ] 支援透過類型字串動態反射實例化與註冊算子
+- [ ] **動態管線執行器 (`pipeline.runner.TaskPipelineRunner`)**
+  - [ ] 支援依序執行任意長度的自訂任務鏈 (`list[VisionTask]`)
+  - [ ] 提供前置攔截與後置檢查鉤子
+- [ ] **解耦動態配方實體 (`core.models.recipe.InspectionRecipe`)**
+  - [ ] 將配方定義重構為動態任務配置清單 (`tasks: list[VisionTaskConfig]`)
+  - [ ] 更新 `storage.legacy_migrator` 將舊版 INI 自動轉換為動態任務鏈
 
----
+### 階段二：完整運算與 GPU 加速後端矩陣 (`algorithms.backend`)
+- [ ] **CPU NumPy SIMD 運算後端 (`NumPyCpuBackend`)**
+  - [ ] 跨平台通用運算降級路徑
+- [ ] **CuPy GPU 陣列運算後端 (`CuPyBackend`)**
+  - [ ] 支援 RTX 3090 GPU 記憶體並行加速
+- [ ] **OpenCV-CUDA 硬體加速後端 (`CudaOpenCVBackend`)**
+  - [ ] 封裝 `cv2.cuda.GpuMat`、Pinned Host Memory 與 CUDA Streams
+  - [ ] 實作 GPU 原生二值化、雙門檻分割與形態學開閉運算
+- [ ] **AI 推論後端 (`OnnxInferenceBackend`)**
+  - [ ] 支援 ONNX Runtime (CUDA / DirectML / CPU) 模型載入與推論
 
-### 階段二：核心演算法移植、優化與 GPU 加速 (Algorithms & Acceleration)
-- [x] **影像前處理模組 (`algorithms.preprocess`)**
-  - [x] 實作純 NumPy/OpenCV CPU 處理管線 (`algorithms.preprocess.filters`)
-  - [x] 實作 CuPy / OpenCV CUDA GPU 加速管線（雙門檻分割、二值化、形態學開/閉/膨脹/侵蝕）
-  - [x] 撰寫單元測試比對 CPU 與 GPU 運算輸出的一致性 (`tests.test_algorithms.test_preprocess`)
-- [x] **基準角定位演算法 (`algorithms.corner_detection`)**
-  - [x] 移植原輪廓極值點搜尋法 (`ContourNearest`)
-  - [x] 移植旋轉矩形擬合與頂點解算 (`RotatedRect` / OpenCV `minAreaRect`)
-  - [x] 移植邊緣掃描與突起特徵定位演算法 (`ScanSearch` / `ProtrusionMode`)
-  - [x] 實作基準角局部座標系轉換器 (`ReferenceBasis` 向量投影，實現平移與旋轉不變性)
-- [x] **尺寸量測與邊緣搜尋模組 (`algorithms.measurement`)**
-  - [x] 實作給定兩點或局部座標的邊緣梯度搜尋（次像素邊緣偵測）
-  - [x] 實作「平行量測 (Parallel)」與「垂直量測 (Perpendicular)」投影距離計算法
-  - [x] 整合 CCD X/Y 精度校準與 Scale Factor，輸出真實物理量（mm / μm）
-- [x] **公差評級與判定引擎 (`algorithms.judgement`)**
-  - [x] 捨棄舊版不安全的字串計算，改以 Python `ast` (抽象語法樹) 安全解析公差計算式 (`algorithms.judgement.evaluator`)
-  - [x] 實作 A/B/NG 階層判定邏輯（全部符合 A 則為 A；含 B 且無 C 則為 B；含 C 則為 NG）
-- [x] **演算法單元測試與黃金樣本比對 (Golden Sample Validation)**
-  - [x] 建立完整測試資料集 (20 個自動化單元測試，涵蓋率 88%，包含座標轉換、前處理、基準角、尺寸量測與 A/B/NG 判定)
+### 階段三：相機硬體驅動後端矩陣 (`hardware.drivers`)
+- [ ] **相機 HAL 統一抽象 (`hardware.camera_base.CameraDevice`)**
+  - [ ] 連接、斷開、單次取圖、非同步串流回呼標準化
+- [ ] **標準 OpenCV USB/DirectShow 相機 (`hardware.opencv_camera.OpenCvCameraDriver`)**
+  - [ ] 支援 Windows DirectShow / UVC 工業視訊相機
+- [ ] **海康機器人工業相機 (`hardware.hikrobot_camera.HikrobotCameraDriver`)**
+  - [ ] 封裝 MVS SDK / CTypes，支援曝光、增益、軟硬體觸發控制
+- [ ] **巴斯勒工業相機 (`hardware.basler_camera.BaslerCameraDriver`)**
+  - [ ] 封裝 Basler Pylon SDK，支援 GigE / USB3 相機連接與取圖
+- [ ] **本機模擬相機 (`hardware.simulated_camera.SimulatedCameraDriver`)**
+  - [ ] 支援目錄圖檔輪播、多格式讀取與合成瑕疵測試模式
 
----
+### 階段四：工業通訊與 PLC 觸發排程後端 (`communication`)
+- [ ] **Modbus TCP 工業通訊客戶端 (`communication.modbus_client.ModbusTcpClient`)**
+  - [ ] 讀取 PLC 檢測就緒/觸發線圈 (Trigger Coil)
+  - [ ] 寫入 A/B/NG 判定結果與產品計數暫存器 (Registers)
+- [ ] **TCP/IP ASCII Socket 服務端 (`communication.tcp_socket.TcpSocketServer`)**
+  - [ ] 支援標準產線機械手臂與自動化設備指令互動 (如 `START`, `TRIG`, `RESULT?`)
+- [ ] **多來源觸發調度器 (`communication.trigger_dispatcher.TriggerDispatcher`)**
+  - [ ] 統一排程軟體觸發、相機硬體 IO 觸發與 PLC 網路觸發
 
-### 階段三：相機介接與多通道平行檢測管線 (Pipeline & Concurrency)
-- [x] **硬體抽象介面 (HAL)**
-  - [x] 定義統一生產者介面 (`CameraDevice`：連接、斷開、取圖、非同步回呼) (`hardware.camera_base`)
-  - [x] 實作本機影像目錄模擬相機（用於離線開發與驗證） (`hardware.simulated_camera`)
-  - [x] 預留主流工業相機 SDK 介面 (如 Hikrobot MVS、Basler Pylon 等) (`hardware.industrial_camera`)
-- [x] **三通道獨立非同步排程管線 (`pipeline.orchestrator`)**
-  - [x] 徹底落實 3 個 Slot 的執行緒/處理程序隔離：
-    - Slot 0 / Slot 1 / Slot 2 各自擁有獨立的工作佇列與上下文 (`InspectionContext`)
-    - 支援高頻相機連續送圖，同通道依序排隊，不同通道平行檢測 (`pipeline.slot_worker`)
-  - [x] 實作記憶體零複製 (Zero-Copy) 共享與生命週期管理
-  - [x] 實作非同步原圖背景存檔（可開關，依 Slot 分目錄存檔）
+### 階段五：生產歷程資料庫與統計分析後端 (`storage.database`)
+- [ ] **SQLite 非同步儲存後端 (`storage.database.sqlite_db.SqliteInspectionDatabase`)**
+  - [ ] 建立工件檢測歷程資料表（時間戳記、產品型號、判定結果、各尺寸數值、圖檔路徑）
+  - [ ] 實作非同步寫入佇列，保證高頻檢測下磁碟 I/O 零阻塞
+- [ ] **品質統計與製程能力分析服務 (`storage.database.analytics.QualityAnalyticsService`)**
+  - [ ] 計算即時良率 (Yield)、CPK、PPK、標準差與尺寸分佈長條圖
+- [ ] **多格式報表匯出引擎 (`storage.exporter.ReportExporter`)**
+  - [ ] 支援檢測記錄自訂欄位匯出為 CSV 與 Excel 格式
 
+### 階段六：標準視覺算子庫 (Pluggable Vision Operators)
+- [ ] **影像前處理算子 (`pipeline.tasks.PreprocessTask`)**
+  - [ ] 支援多後端單門檻、雙門檻分割與自訂形態學組合
+- [ ] **定位配準算子 (`pipeline.tasks.CornerAlignmentTask`, `TemplateMatchTask`)**
+  - [ ] 基準角定位 (`ContourNearest`, `RoiTopEdge`, `ScanSearch`)
+  - [ ] 模板匹配定位 (Normalized Cross-Correlation)
+- [ ] **幾何尺寸量測算子 (`LineMeasureTask`, `PointToLineTask`, `CircleFitTask`)**
+  - [ ] 次像素邊緣直線量測與平行/垂直投影距離
+  - [ ] 點到直線最短距離量測
+  - [ ] 最小平方法圓孔孔徑與同心度擬合 (Circle Fit)
+- [ ] **表面瑕疵檢測算子 (`pipeline.tasks.BlobDefectTask`)**
+  - [ ] 連通域面積、周長、圓度與深淺斑點瑕疵分析
+- [ ] **安全公差評判算子 (`pipeline.tasks.ToleranceJudgementTask`)**
+  - [ ] 基於安全 AST 求解各尺寸公差，執行 A/B/NG 階層判定
+- [ ] **PLC 訊號發送算子 (`pipeline.tasks.PlcPublishTask`)**
+  - [ ] 將當前結果自動透過通訊後端發布至外部產線設備
 
----
+### 階段七：現代化 Studio UI 重構 (動態工作流與算子調試)
+- [ ] **三通道即時檢測儀表板 (`ui.views.live_inspection_view`)**
+  - [ ] 支援 3 Slot 獨立預覽、實時良率統計卡片、大字卡判定反饋
+- [ ] **動態算子任務鏈視覺化工作區 (`ui.views.task_pipeline_view`)**
+  - [ ] 支援在畫面上隨意新增、刪除、拖曳調整算子順序
+  - [ ] 支援在視窗中即時查看任何算子產出的中間處理影像 (Intermediate Buffers)
+- [ ] **歷史紀錄與品質分析看板 (`ui.views.history_view`)**
+  - [ ] 查詢歷史檢測紀錄、統計圖表繪製、CSV/Excel 一鍵匯出
+- [ ] **通訊設定與 I/O 監控視窗 (`ui.views.communication_view`)**
+  - [ ] Modbus / Socket 連線狀態監控與手動觸發測試
 
-### 階段四：現代化 UI/UX 重新設計 (Modern PySide6 Desktop UI)
-- [x] **視覺風格與佈局基礎**
-  - [x] 引進現代工業暗色主題 (Dark Theme) 與響應式佈局 (無縫支援 1080P/2K/4K 螢幕) (`ui.theme`)
-  - [x] 現代側欄導覽列 (支援圖標 + 文字折疊、工作區直覺切換) (`ui.main_window`)
-  - [x] 權限模式與快速切換 (操作員 / 工程師 / 管理者，具備流暢的角色狀態切換與安全認證) (`ui.components.role_dialog`)
-- [x] **高效能影像檢視器元件 (`QGraphicsView` / OpenGL)**
-  - [x] 實作平滑如絲的滑鼠滾輪縮放 (Zoom) 與左鍵拖曳平移 (Pan) (`ui.components.image_viewport`)
-  - [x] 實作多層圖層架構 (底圖層、基準角標記層、ROI 選擇層、量測線層、公差標籤層)
-  - [x] 支援互動式 ROI 拖曳、量測點直覺微調
-- [x] **3-Slot 連續檢測儀表板 (Live Inspection View)**
-  - [x] 3 個獨立預覽卡片，支援實時 FPS、佇列狀態、量測耗時顯示 (`ui.views.live_inspection_view`)
-  - [x] 即時良率統計圓餅圖/長條圖 (Total / A規 / B規 / NG 統計) (`ui.components.stat_card`)
-  - [x] 判定結果大字卡即時視覺反饋 (綠色 A / 橙色 B / 紅色 NG)
-- [x] **配方與演算法調校工作區**
-  - [x] 前處理可視化工作區：即時雙門檻滑桿拖拉，即時預覽二值化與形態學效果 (`ui.views.preprocess_view`)
-  - [x] 基準角標定工作區：可視化微調 ROI 與掃描門檻，即時預覽旋轉框與錨點 (`ui.views.corner_view`)
-  - [x] 量測設定工作區：點選即可新增線段，彈出式平行/垂直輔助設定 (`ui.views.recipe_editor_view`)
-  - [x] 批次多圖驗證工作區：支援讀取目錄多張圖片快速走查，批次輸出量測 CSV 報告 (`ui.views.batch_verify_view`)
-
-
----
-
-### 階段五：整合測試、效能調優與打包發布 (Testing, Profiling & Deployment)
-- [x] **效能 Profiling 與調優**
-  - [x] 測試相機 30FPS / 60FPS 輸入下的 CPU/GPU 使用率 (`scripts/profile_throughput.py`)
-  - [x] 確保 UI 介面在連續高頻檢測下維持 60FPS 零卡頓 (`tests/test_performance/test_benchmarks.py`)
-- [x] **打包與環境封裝**
-  - [x] 撰寫一鍵啟動腳本與 Conda/venv 環境鎖定檔 (`run.bat`, `run.ps1`)
-  - [x] 使用 PyInstaller / Nuitka 進行獨立執行檔 (Standalone Exe) 打包 (`scripts/build_exe.py`)
-  - [x] 建立日誌系統 (Loguru)，記錄檢測異常、量測超差紀錄與相機斷線自動重連 (`core.logger`)
-
-
----
-
-## 💡 技術選型建議 (Tech Stack)
-
-| 模組領域 | 推薦技術 | 選型優勢 |
-| :--- | :--- | :--- |
-| **GUI 框架** | `PySide6` (Qt 6) + `QFluentWidgets` | 官方 Qt 綁定，穩定、硬體加速視窗、現代化工業美觀 UI |
-| **GPU 加速運算** | `CuPy` + `OpenCV-CUDA` (或 `DirectML`) | 語法與 NumPy 高度相容，門檻低且在矩陣與影像濾波上具備數倍至數十倍效能提升 |
-| **影像處理** | `OpenCV (cv2)` + `NumPy` | 成熟的電腦視覺工業標準，便於移植原 C# OpenCvSharp 演算法 |
-| **非同步與平行處理** | `concurrent.futures` + Qt `QThreadPool` / `QThread` | 兼顧執行緒安全與事件驅動，避免 UI 執行緒被大量運算卡死 |
-| **資料校驗與模型** | `Pydantic v2` / `dataclasses` | 強型別、自動資料驗證與 JSON 序列化，徹底取代鬆散的 INI 解析 |
-| **日誌與監控** | `loguru` | 開箱即用、支援非同步寫入、自動依日期輪轉 |
+### 階段八：整合測試、效能壓測與打包交付
+- [ ] **全後端單元測試與 TDD 驗證** (維持覆蓋率 >= 80%)
+- [ ] **高頻 60FPS 壓力測試與延遲基準驗證** (< 30ms 延遲)
+- [ ] **Windows 獨立執行檔打包 (`scripts.build_exe`)**
+- [ ] **一鍵啟動腳本與現場部署文件 (`run.bat`, `run.ps1`)**
