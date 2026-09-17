@@ -116,10 +116,10 @@ aoi_system/
   - [x] 移植旋轉矩形擬合與頂點解算 (`RotatedRect` / OpenCV `minAreaRect`)
   - [x] 移植邊緣掃描與突起特徵定位演算法 (`ScanSearch` / `ProtrusionMode`)
   - [x] 實作基準角局部座標系轉換器 (`ReferenceBasis` 向量投影，實現平移與旋轉不變性)
-- [ ] **尺寸量測與邊緣搜尋模組 (`algorithms.measurement`)**
-  - [ ] 實作給定兩點或局部座標的邊緣梯度搜尋（次像素邊緣偵測）
-  - [ ] 實作「平行量測 (Parallel)」與「垂直量測 (Perpendicular)」投影距離計算法
-  - [ ] 整合 CCD X/Y 精度校準與 Scale Factor，輸出真實物理量（mm / μm）
+- [x] **尺寸量測與邊緣搜尋模組 (`algorithms.measurement`)**
+  - [x] 實作給定兩點或局部座標的邊緣梯度搜尋（次像素邊緣偵測）
+  - [x] 實作「平行量測 (Parallel)」與「垂直量測 (Perpendicular)」投影距離計算法
+  - [x] 整合 CCD X/Y 精度校準與 Scale Factor，輸出真實物理量（mm / μm）
 - [ ] **公差評級與判定引擎 (`algorithms.judgement`)**
   - [ ] 捨棄舊版不安全的字串計算，改以 Python `ast` (抽象語法樹) 安全解析公差計算式
   - [ ] 實作 A/B/NG 階層判定邏輯（全部符合 A 則為 A；含 B 且無 C 則為 B；含 C 則為 NG）
