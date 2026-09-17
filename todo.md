@@ -81,22 +81,23 @@ aoi_system/
 - [x] 建立虛擬環境與套件依賴 (`pyproject.toml`)
 
 ### 階段一：黑板上下文與動態任務管線引擎 (`pipeline.tasks` & `core.context`)
-- [ ] **黑板上下文架構 (`core.context.InspectionContext`)**
-  - [ ] 支援動態儲存原圖與各階段中間處理影像 (`images: dict[str, np.ndarray]`)
-  - [ ] 支援幾何特徵與座標基底註冊 (`features: dict[str, Any]`)
-  - [ ] 支援量測數值與公差判定收集 (`measurements: dict[str, float]`)
-  - [ ] 支援異常與日誌收集 (`anomalies: list[str]`)
-- [ ] **視覺算子任務抽象合約 (`pipeline.tasks.base.VisionTask`)**
-  - [ ] 定義標準 `execute(ctx: InspectionContext) -> TaskResult` 介面
-  - [ ] 支援任務啟用/禁用、執行耗時統計與例外捕獲
-- [ ] **任務註冊工廠 (`pipeline.tasks.registry.TaskRegistry`)**
-  - [ ] 支援透過類型字串動態反射實例化與註冊算子
-- [ ] **動態管線執行器 (`pipeline.runner.TaskPipelineRunner`)**
-  - [ ] 支援依序執行任意長度的自訂任務鏈 (`list[VisionTask]`)
-  - [ ] 提供前置攔截與後置檢查鉤子
-- [ ] **解耦動態配方實體 (`core.models.recipe.InspectionRecipe`)**
-  - [ ] 將配方定義重構為動態任務配置清單 (`tasks: list[VisionTaskConfig]`)
-  - [ ] 更新 `storage.legacy_migrator` 將舊版 INI 自動轉換為動態任務鏈
+- [x] **黑板上下文架構 (`core.context.InspectionContext`)**
+  - [x] 支援動態儲存原圖與各階段中間處理影像 (`images: dict[str, np.ndarray]`)
+  - [x] 支援幾何特徵與座標基底註冊 (`features: dict[str, Any]`)
+  - [x] 支援量測數值與公差判定收集 (`measurements: dict[str, float]`)
+  - [x] 支援異常與日誌收集 (`anomalies: list[str]`)
+- [x] **視覺算子任務抽象合約 (`pipeline.tasks.base.VisionTask`)**
+  - [x] 定義標準 `execute(ctx: InspectionContext) -> TaskResult` 介面
+  - [x] 支援任務啟用/禁用、執行耗時統計與例外捕獲
+- [x] **任務註冊工廠 (`pipeline.tasks.registry.TaskRegistry`)**
+  - [x] 支援透過類型字串動態反射實例化與註冊算子
+- [x] **動態管線執行器 (`pipeline.runner.TaskPipelineRunner`)**
+  - [x] 支援依序執行任意長度的自訂任務鏈 (`list[VisionTask]`)
+  - [x] 提供前置攔截與後置檢查鉤子
+- [x] **解耦動態配方實體 (`core.models.recipe.InspectionRecipe`)**
+  - [x] 將配方定義重構為動態任務配置清單 (`tasks: list[VisionTaskConfig]`)
+  - [x] 更新 `storage.legacy_migrator` 將舊版 INI 自動轉換為動態任務鏈
+
 
 ### 階段二：完整運算與 GPU 加速後端矩陣 (`algorithms.backend`)
 - [ ] **CPU NumPy SIMD 運算後端 (`NumPyCpuBackend`)**

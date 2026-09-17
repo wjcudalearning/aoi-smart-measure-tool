@@ -22,3 +22,8 @@ build/
 
 # Legacy repo folder
 my-app/
+
+# Logs and runtime captures
+logs/
+data/
+*.log

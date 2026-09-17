@@ -3,18 +3,8 @@ name: AOI System CI Pipeline
 on:
   push:
     branches: [ main, develop ]
-    paths:
-      - 'aoi_system/**'
-      - 'tests/**'
-      - 'pyproject.toml'
-      - '.github/workflows/ci.yml'
   pull_request:
     branches: [ main, develop ]
-    paths:
-      - 'aoi_system/**'
-      - 'tests/**'
-      - 'pyproject.toml'
-      - '.github/workflows/ci.yml'
 
 jobs:
   lint-and-typecheck:
@@ -70,19 +60,21 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Install Qt and OpenGL system dependencies (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libegl1 libgl1 libxkbcommon-x11-0 libdbus-1-3 libxcb-cursor0
+
       - name: Install project and test dependencies
         run: |
           uv venv
-          uv pip install -e ".[test]" || uv pip install pytest pytest-cov numpy opencv-python pydantic
+          uv pip install -e ".[test]"
 
       - name: Run Pytest with Coverage
-        run: |
-          uv run pytest tests/ \
-            -v \
-            --cov=aoi_system \
-            --cov-report=term-missing \
-            --cov-report=xml \
-            --cov-fail-under=80
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: uv run pytest tests/ -v --cov=aoi_system --cov-report=term-missing --cov-report=xml --cov-fail-under=80
 
       - name: Upload Test Coverage
         uses: actions/upload-artifact@v4

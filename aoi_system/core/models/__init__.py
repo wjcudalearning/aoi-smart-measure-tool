@@ -18,6 +18,7 @@ from aoi_system.core.models.recipe import (
     PreprocessSnapshot,
     ReferenceCornerPointMode,
     ReferenceCornerSnapshot,
+    VisionTaskConfig,
 )
 from aoi_system.core.models.results import (
     ContinuousInspectionResult,
@@ -40,6 +41,7 @@ __all__ = [
     "JudgementCriterionRule",
     "CameraCalibration",
     "InspectionRecipe",
+    "VisionTaskConfig",
     "ContinuousInspectionResult",
     "ContinuousInspectionRuleResult",
 ]

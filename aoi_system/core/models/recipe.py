@@ -1,4 +1,5 @@
 from enum import IntEnum
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -59,10 +60,20 @@ class CameraCalibration(BaseModel):
     measurement_scale_factor: float = 1.0
 
 
+class VisionTaskConfig(BaseModel):
+    task_id: str
+    task_type: str
+    enabled: bool = True
+    parameters: dict[str, Any] = Field(default_factory=dict)
+
+
 class InspectionRecipe(BaseModel):
-    """Complete product inspection recipe entity."""
+    """Complete product inspection recipe entity supporting dynamic vision task pipeline."""
 
     product_key: str = "DEFAULT"
+    tasks: list[VisionTaskConfig] = Field(default_factory=list)
+
+    # Legacy fields for backward compatibility with existing configs & INI
     preprocess_snapshots: list[PreprocessSnapshot] = Field(
         default_factory=lambda: [PreprocessSnapshot() for _ in range(4)]
     )

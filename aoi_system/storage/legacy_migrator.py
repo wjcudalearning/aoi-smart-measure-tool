@@ -11,7 +11,9 @@ from aoi_system.core.models.recipe import (
     InspectionRecipe,
     JudgementCriterionRule,
     ReferenceCornerPointMode,
+    VisionTaskConfig,
 )
+
 
 
 class LegacyMigratorBundle(BaseModel):
@@ -286,4 +288,46 @@ class LegacyIniMigrator:
                 )
                 recipe.judgement_rules.append(rule)
 
+            # Build decoupled dynamic task configurations
+            tasks: list[VisionTaskConfig] = []
+            for i, snap in enumerate(recipe.preprocess_snapshots):
+                if snap.enabled:
+                    tasks.append(
+                        VisionTaskConfig(
+                            task_id=f"preprocess_{i + 1}",
+                            task_type="preprocess",
+                            enabled=True,
+                            parameters=snap.model_dump(),
+                        )
+                    )
+            if recipe.reference_corner.enabled:
+                tasks.append(
+                    VisionTaskConfig(
+                        task_id="corner_alignment",
+                        task_type="corner_alignment",
+                        enabled=True,
+                        parameters=recipe.reference_corner.model_dump(),
+                    )
+                )
+            for m_i, rec in enumerate(recipe.measure_records, start=1):
+                tasks.append(
+                    VisionTaskConfig(
+                        task_id=f"measure_{m_i}",
+                        task_type="measure_line",
+                        enabled=True,
+                        parameters=rec.model_dump(),
+                    )
+                )
+            if recipe.judgement_rules:
+                tasks.append(
+                    VisionTaskConfig(
+                        task_id="judgement",
+                        task_type="judgement",
+                        enabled=True,
+                        parameters={"rules": [r.model_dump() for r in recipe.judgement_rules]},
+                    )
+                )
+            recipe.tasks = tasks
+
             bundle.recipes[product_key] = recipe
+
