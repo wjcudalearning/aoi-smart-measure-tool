@@ -69,3 +69,61 @@ def test_throughput_benchmark_under_30ms():
     assert total_time < 1.5
 
     orchestrator.stop()
+
+
+def test_60fps_continuous_stream_benchmark():
+    """Verify that processing 60 consecutive frames completes well within real-time budget."""
+    orchestrator = ContinuousInspectionOrchestrator()
+    recipe = InspectionRecipe(product_key="60FPS_TEST")
+    recipe.preprocess_snapshots[0] = PreprocessSnapshot(enabled=True, threshold=100)
+    orchestrator.set_slot_recipe(0, recipe)
+
+    frame = np.zeros((200, 200), dtype=np.uint8)
+    frame[50:150, 50:150] = 200
+
+    t_start = time.perf_counter()
+    latencies = []
+    for _ in range(60):
+        res = orchestrator.load_and_judge(0, frame)
+        latencies.append(res.processing_time_ms)
+
+    total_duration = time.perf_counter() - t_start
+    avg_latency = sum(latencies) / len(latencies)
+
+    # For 60 FPS real-time streaming, average processing time per frame must be < 30ms
+    assert avg_latency < 30.0, f"Average latency too high for 60FPS: {avg_latency:.2f} ms"
+    # Total duration for 60 frames on simple image should be < 2 seconds
+    assert total_duration < 2.0
+    orchestrator.stop()
+
+
+def test_multislot_concurrent_load():
+    """Verify 3-Slot simultaneous inspection throughput and isolation."""
+    orchestrator = ContinuousInspectionOrchestrator()
+    for slot_idx in range(3):
+        rec = InspectionRecipe(product_key=f"PROD_SLOT_{slot_idx}")
+        rec.preprocess_snapshots[0] = PreprocessSnapshot(enabled=True, threshold=120)
+        orchestrator.set_slot_recipe(slot_idx, rec)
+
+    frame = np.zeros((150, 150), dtype=np.uint8)
+    frame[30:80, 30:80] = 255
+
+    for _ in range(10):
+        for slot_idx in range(3):
+            res = orchestrator.load_and_judge(slot_idx, frame)
+            assert res is not None
+            assert res.processing_time_ms < 30.0
+
+    orchestrator.stop()
+
+
+def test_build_exe_script_executable():
+    """Verify scripts/build_exe.py is syntactically valid and importable."""
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("build_exe", "scripts/build_exe.py")
+    assert spec is not None
+    assert spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    assert hasattr(module, "build")
