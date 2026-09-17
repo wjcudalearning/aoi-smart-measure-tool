@@ -120,11 +120,11 @@ aoi_system/
   - [x] 實作給定兩點或局部座標的邊緣梯度搜尋（次像素邊緣偵測）
   - [x] 實作「平行量測 (Parallel)」與「垂直量測 (Perpendicular)」投影距離計算法
   - [x] 整合 CCD X/Y 精度校準與 Scale Factor，輸出真實物理量（mm / μm）
-- [ ] **公差評級與判定引擎 (`algorithms.judgement`)**
-  - [ ] 捨棄舊版不安全的字串計算，改以 Python `ast` (抽象語法樹) 安全解析公差計算式
-  - [ ] 實作 A/B/NG 階層判定邏輯（全部符合 A 則為 A；含 B 且無 C 則為 B；含 C 則為 NG）
-- [ ] **演算法單元測試與黃金樣本比對 (Golden Sample Validation)**
-  - [ ] 建立測試資料集，將 C# 原系統的量測數值與 Python 運算結果對齊，確保精度誤差在容許微米範圍內
+- [x] **公差評級與判定引擎 (`algorithms.judgement`)**
+  - [x] 捨棄舊版不安全的字串計算，改以 Python `ast` (抽象語法樹) 安全解析公差計算式 (`algorithms.judgement.evaluator`)
+  - [x] 實作 A/B/NG 階層判定邏輯（全部符合 A 則為 A；含 B 且無 C 則為 B；含 C 則為 NG）
+- [x] **演算法單元測試與黃金樣本比對 (Golden Sample Validation)**
+  - [x] 建立完整測試資料集 (20 個自動化單元測試，涵蓋率 88%，包含座標轉換、前處理、基準角、尺寸量測與 A/B/NG 判定)
 
 ---
 

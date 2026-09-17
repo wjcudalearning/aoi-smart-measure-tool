@@ -115,8 +115,7 @@ class MeasurementCalculator:
         )
         mm_dist = (
             math.sqrt(
-                (dx * calibration.ccd_x_precision) ** 2
-                + (dy * calibration.ccd_y_precision) ** 2
+                (dx * calibration.ccd_x_precision) ** 2 + (dy * calibration.ccd_y_precision) ** 2
             )
             * scale
         )
