@@ -44,3 +44,5 @@ addopts = "-v --strict-markers"
 python_version = "3.12"
 strict = true
 ignore_missing_imports = true
+files = ["aoi_system"]
+

@@ -129,16 +129,17 @@ aoi_system/
 ---
 
 ### 階段三：相機介接與多通道平行檢測管線 (Pipeline & Concurrency)
-- [ ] **硬體抽象介面 (HAL)**
-  - [ ] 定義統一生產者介面 (`CameraDevice`：連接、斷開、取圖、非同步回呼)
-  - [ ] 實作本機影像目錄模擬相機（用於離線開發與驗證）
-  - [ ] 預留主流工業相機 SDK 介面 (如 Hikrobot MVS、Basler Pylon 等)
-- [ ] **三通道獨立非同步排程管線 (`pipeline.orchestrator`)**
-  - [ ] 徹底落實 3 個 Slot 的執行緒/處理程序隔離：
+- [x] **硬體抽象介面 (HAL)**
+  - [x] 定義統一生產者介面 (`CameraDevice`：連接、斷開、取圖、非同步回呼) (`hardware.camera_base`)
+  - [x] 實作本機影像目錄模擬相機（用於離線開發與驗證） (`hardware.simulated_camera`)
+  - [x] 預留主流工業相機 SDK 介面 (如 Hikrobot MVS、Basler Pylon 等) (`hardware.industrial_camera`)
+- [x] **三通道獨立非同步排程管線 (`pipeline.orchestrator`)**
+  - [x] 徹底落實 3 個 Slot 的執行緒/處理程序隔離：
     - Slot 0 / Slot 1 / Slot 2 各自擁有獨立的工作佇列與上下文 (`InspectionContext`)
-    - 支援高頻相機連續送圖，同通道依序排隊，不同通道平行檢測
-  - [ ] 實作記憶體零複製 (Zero-Copy) 共享與生命週期管理
-  - [ ] 實作非同步原圖背景存檔（可開關，依 Slot 分目錄存檔）
+    - 支援高頻相機連續送圖，同通道依序排隊，不同通道平行檢測 (`pipeline.slot_worker`)
+  - [x] 實作記憶體零複製 (Zero-Copy) 共享與生命週期管理
+  - [x] 實作非同步原圖背景存檔（可開關，依 Slot 分目錄存檔）
+
 
 ---
 
