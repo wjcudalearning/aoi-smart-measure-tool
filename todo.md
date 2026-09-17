@@ -100,15 +100,15 @@ aoi_system/
 
 
 ### 階段二：完整運算與 GPU 加速後端矩陣 (`algorithms.backend`)
-- [ ] **CPU NumPy SIMD 運算後端 (`NumPyCpuBackend`)**
-  - [ ] 跨平台通用運算降級路徑
-- [ ] **CuPy GPU 陣列運算後端 (`CuPyBackend`)**
-  - [ ] 支援 RTX 3090 GPU 記憶體並行加速
-- [ ] **OpenCV-CUDA 硬體加速後端 (`CudaOpenCVBackend`)**
-  - [ ] 封裝 `cv2.cuda.GpuMat`、Pinned Host Memory 與 CUDA Streams
-  - [ ] 實作 GPU 原生二值化、雙門檻分割與形態學開閉運算
-- [ ] **AI 推論後端 (`OnnxInferenceBackend`)**
-  - [ ] 支援 ONNX Runtime (CUDA / DirectML / CPU) 模型載入與推論
+- [x] **CPU NumPy SIMD 運算後端 (`NumPyCpuBackend`)**
+  - [x] 跨平台通用運算降級路徑
+- [x] **CuPy GPU 陣列運算後端 (`CuPyBackend`)**
+  - [x] 支援 RTX 3090 GPU 記憶體並行加速
+- [x] **OpenCV-CUDA 硬體加速後端 (`CudaOpenCVBackend`)**
+  - [x] 封裝 `cv2.cuda.GpuMat`、Pinned Host Memory 與 CUDA Streams
+  - [x] 實作 GPU 原生二值化、雙門檻分割與形態學開閉運算
+- [x] **AI 推論後端 (`OnnxInferenceBackend`)**
+  - [x] 支援 ONNX Runtime (CUDA / DirectML / CPU) 模型載入與推論
 
 ### 階段三：相機硬體驅動後端矩陣 (`hardware.drivers`)
 - [ ] **相機 HAL 統一抽象 (`hardware.camera_base.CameraDevice`)**
