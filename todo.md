@@ -100,9 +100,9 @@ aoi_system/
     - [x] `CameraCalibration`（CCD X/Y 精度、物理縮放係數）
     - [x] `ContinuousInspectionResult`, `ContinuousInspectionRuleResult`（檢測結果實體）
   - [x] 實作工件局部座標系轉換 (`core.coordinates`) 並以 TDD 測試通過 (涵蓋率 99%)
-- [ ] **配方持久化與舊版 INI 相容工具 (`storage`)**
-  - [ ] 採用現代結構化儲存格式（JSON 或 SQLite），取代雜亂的 INI 檔案
-  - [ ] 撰寫 `legacy_migrator.py`：能自動讀取原系統的 `setting.ini`、`parameterReferenceList.ini`、`innerSetting.ini`，一鍵匯入為新系統配方
+- [x] **配方持久化與舊版 INI 相容工具 (`storage`)**
+  - [x] 採用現代結構化儲存格式（JSON），取代雜亂的 INI 檔案 (`storage.recipe_repository`)
+  - [x] 撰寫 `legacy_migrator.py`：能自動讀取原系統的 `setting.ini`、`parameterReferenceList.ini`、`innerSetting.ini`，一鍵匯入為新系統配方 (單元測試涵蓋率 94%)
 
 ---
 

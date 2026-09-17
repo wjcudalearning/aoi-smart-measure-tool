@@ -1,9 +1,11 @@
 from pydantic import BaseModel, Field
 
+
 class ContinuousInspectionRuleResult(BaseModel):
     rule_name: str
     calculation_value: str
     judgement: str  # "A", "B", "NG", or "N/A"
+
 
 class ContinuousInspectionResult(BaseModel):
     slot_index: int = 0

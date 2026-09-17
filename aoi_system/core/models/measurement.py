@@ -1,14 +1,19 @@
-from enum import Enum
+from enum import StrEnum
+
 from pydantic import BaseModel, Field
+
 from aoi_system.core.models.geometry import Point2D, Point2I
 
-class MeasureDirectionMode(str, Enum):
+
+class MeasureDirectionMode(StrEnum):
     NONE = "None"
     PARALLEL = "Parallel"
     PERPENDICULAR = "Perpendicular"
 
+
 class MeasureRecord(BaseModel):
     """Stores definition and computed values of a measurement line."""
+
     start_point: Point2I = Field(default_factory=Point2I)
     end_point: Point2I = Field(default_factory=Point2I)
     center_point: Point2I = Field(default_factory=Point2I)

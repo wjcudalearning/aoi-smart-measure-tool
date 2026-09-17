@@ -1,12 +1,16 @@
 from enum import IntEnum
+
 from pydantic import BaseModel, Field
+
 from aoi_system.core.models.geometry import BoundingRect
 from aoi_system.core.models.measurement import MeasureRecord
+
 
 class ReferenceCornerPointMode(IntEnum):
     CONTOUR_NEAREST = 0
     ROI_TOP_EDGE = 1
     SCAN_SEARCH = 2
+
 
 class PreprocessSnapshot(BaseModel):
     enabled: bool = False
@@ -18,6 +22,7 @@ class PreprocessSnapshot(BaseModel):
     open_iterations: int = 0
     close_iterations: int = 0
 
+
 class DualThresholdSnapshot(BaseModel):
     enabled: bool = False
     lower_threshold: int = 50
@@ -26,6 +31,7 @@ class DualThresholdSnapshot(BaseModel):
     dilate_iterations: int = 0
     open_iterations: int = 0
     close_iterations: int = 0
+
 
 class ReferenceCornerSnapshot(BaseModel):
     enabled: bool = False
@@ -36,12 +42,14 @@ class ReferenceCornerSnapshot(BaseModel):
     roi_saved: bool = False
     corner_found: bool = False
 
+
 class JudgementCriterionRule(BaseModel):
     name: str = ""
     calc_expression: str = ""
     spec_expression: str = ""
     calc_expression_b: str = ""
     spec_expression_b: str = ""
+
 
 class CameraCalibration(BaseModel):
     camera_name: str = "DefaultCamera"
@@ -50,8 +58,10 @@ class CameraCalibration(BaseModel):
     ccd_y_precision: float = 0.005  # mm per pixel
     measurement_scale_factor: float = 1.0
 
+
 class InspectionRecipe(BaseModel):
     """Complete product inspection recipe entity."""
+
     product_key: str = "DEFAULT"
     preprocess_snapshots: list[PreprocessSnapshot] = Field(
         default_factory=lambda: [PreprocessSnapshot() for _ in range(4)]
