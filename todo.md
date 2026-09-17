@@ -123,13 +123,13 @@ aoi_system/
   - [x] 支援目錄圖檔輪播、多格式讀取與合成瑕疵測試模式
 
 ### 階段四：工業通訊與 PLC 觸發排程後端 (`communication`)
-- [ ] **Modbus TCP 工業通訊客戶端 (`communication.modbus_client.ModbusTcpClient`)**
-  - [ ] 讀取 PLC 檢測就緒/觸發線圈 (Trigger Coil)
-  - [ ] 寫入 A/B/NG 判定結果與產品計數暫存器 (Registers)
-- [ ] **TCP/IP ASCII Socket 服務端 (`communication.tcp_socket.TcpSocketServer`)**
-  - [ ] 支援標準產線機械手臂與自動化設備指令互動 (如 `START`, `TRIG`, `RESULT?`)
-- [ ] **多來源觸發調度器 (`communication.trigger_dispatcher.TriggerDispatcher`)**
-  - [ ] 統一排程軟體觸發、相機硬體 IO 觸發與 PLC 網路觸發
+- [x] **Modbus TCP 工業通訊客戶端 (`communication.modbus_client.ModbusTcpClient`)**
+  - [x] 讀取 PLC 檢測就緒/觸發線圈 (Trigger Coil)
+  - [x] 寫入 A/B/NG 判定結果與產品計數暫存器 (Registers)
+- [x] **TCP/IP ASCII Socket 服務端 (`communication.tcp_socket.TcpSocketServer`)**
+  - [x] 支援標準產線機械手臂與自動化設備指令互動 (如 `START`, `TRIG`, `RESULT?`)
+- [x] **多來源觸發調度器 (`communication.trigger_dispatcher.TriggerDispatcher`)**
+  - [x] 統一排程軟體觸發、相機硬體 IO 觸發與 PLC 網路觸發
 
 ### 階段五：生產歷程資料庫與統計分析後端 (`storage.database`)
 - [ ] **SQLite 非同步儲存後端 (`storage.database.sqlite_db.SqliteInspectionDatabase`)**
