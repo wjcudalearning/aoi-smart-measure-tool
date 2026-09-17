@@ -15,7 +15,6 @@ from aoi_system.core.models.recipe import (
 )
 
 
-
 class LegacyMigratorBundle(BaseModel):
     engineer_password: str = "0000"
     admin_password: str = "0000"
@@ -330,4 +329,3 @@ class LegacyIniMigrator:
             recipe.tasks = tasks
 
             bundle.recipes[product_key] = recipe
-
