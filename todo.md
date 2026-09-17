@@ -166,13 +166,14 @@ aoi_system/
 ---
 
 ### 階段五：整合測試、效能調優與打包發布 (Testing, Profiling & Deployment)
-- [ ] **效能 Profiling 與調優**
-  - [ ] 測試相機 30FPS / 60FPS 輸入下的 CPU/GPU 使用率
-  - [ ] 確保 UI 介面在連續高頻檢測下維持 60FPS 零卡頓
-- [ ] **打包與環境封裝**
-  - [ ] 撰寫一鍵啟動腳本與 Conda/venv 環境鎖定檔
-  - [ ] 使用 PyInstaller / Nuitka 進行獨立執行檔 (Standalone Exe) 打包
-  - [ ] 建立日誌系統 (Loguru)，記錄檢測異常、量測超差紀錄與相機斷線自動重連
+- [x] **效能 Profiling 與調優**
+  - [x] 測試相機 30FPS / 60FPS 輸入下的 CPU/GPU 使用率 (`scripts/profile_throughput.py`)
+  - [x] 確保 UI 介面在連續高頻檢測下維持 60FPS 零卡頓 (`tests/test_performance/test_benchmarks.py`)
+- [x] **打包與環境封裝**
+  - [x] 撰寫一鍵啟動腳本與 Conda/venv 環境鎖定檔 (`run.bat`, `run.ps1`)
+  - [x] 使用 PyInstaller / Nuitka 進行獨立執行檔 (Standalone Exe) 打包 (`scripts/build_exe.py`)
+  - [x] 建立日誌系統 (Loguru)，記錄檢測異常、量測超差紀錄與相機斷線自動重連 (`core.logger`)
+
 
 ---
 
