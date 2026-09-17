@@ -111,16 +111,16 @@ aoi_system/
   - [x] 支援 ONNX Runtime (CUDA / DirectML / CPU) 模型載入與推論
 
 ### 階段三：相機硬體驅動後端矩陣 (`hardware.drivers`)
-- [ ] **相機 HAL 統一抽象 (`hardware.camera_base.CameraDevice`)**
-  - [ ] 連接、斷開、單次取圖、非同步串流回呼標準化
-- [ ] **標準 OpenCV USB/DirectShow 相機 (`hardware.opencv_camera.OpenCvCameraDriver`)**
-  - [ ] 支援 Windows DirectShow / UVC 工業視訊相機
-- [ ] **海康機器人工業相機 (`hardware.hikrobot_camera.HikrobotCameraDriver`)**
-  - [ ] 封裝 MVS SDK / CTypes，支援曝光、增益、軟硬體觸發控制
-- [ ] **巴斯勒工業相機 (`hardware.basler_camera.BaslerCameraDriver`)**
-  - [ ] 封裝 Basler Pylon SDK，支援 GigE / USB3 相機連接與取圖
-- [ ] **本機模擬相機 (`hardware.simulated_camera.SimulatedCameraDriver`)**
-  - [ ] 支援目錄圖檔輪播、多格式讀取與合成瑕疵測試模式
+- [x] **相機 HAL 統一抽象 (`hardware.camera_base.CameraDevice`)**
+  - [x] 連接、斷開、單次取圖、非同步串流回呼標準化
+- [x] **標準 OpenCV USB/DirectShow 相機 (`hardware.opencv_camera.OpenCvCameraDriver`)**
+  - [x] 支援 Windows DirectShow / UVC 工業視訊相機
+- [x] **海康機器人工業相機 (`hardware.hikrobot_camera.HikrobotCameraDriver`)**
+  - [x] 封裝 MVS SDK / CTypes，支援曝光、增益、軟硬體觸發控制
+- [x] **巴斯勒工業相機 (`hardware.basler_camera.BaslerCameraDriver`)**
+  - [x] 封裝 Basler Pylon SDK，支援 GigE / USB3 相機連接與取圖
+- [x] **本機模擬相機 (`hardware.simulated_camera.SimulatedCameraDriver`)**
+  - [x] 支援目錄圖檔輪播、多格式讀取與合成瑕疵測試模式
 
 ### 階段四：工業通訊與 PLC 觸發排程後端 (`communication`)
 - [ ] **Modbus TCP 工業通訊客戶端 (`communication.modbus_client.ModbusTcpClient`)**
