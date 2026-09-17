@@ -27,3 +27,5 @@ my-app/
 logs/
 data/
 *.log
+*.db
+*.sqlite

@@ -158,15 +158,15 @@ aoi_system/
   - [x] 將當前結果自動透過通訊後端發布至外部產線設備
 
 ### 階段七：現代化 Studio UI 重構 (動態工作流與算子調試)
-- [ ] **三通道即時檢測儀表板 (`ui.views.live_inspection_view`)**
-  - [ ] 支援 3 Slot 獨立預覽、實時良率統計卡片、大字卡判定反饋
-- [ ] **動態算子任務鏈視覺化工作區 (`ui.views.task_pipeline_view`)**
-  - [ ] 支援在畫面上隨意新增、刪除、拖曳調整算子順序
-  - [ ] 支援在視窗中即時查看任何算子產出的中間處理影像 (Intermediate Buffers)
-- [ ] **歷史紀錄與品質分析看板 (`ui.views.history_view`)**
-  - [ ] 查詢歷史檢測紀錄、統計圖表繪製、CSV/Excel 一鍵匯出
-- [ ] **通訊設定與 I/O 監控視窗 (`ui.views.communication_view`)**
-  - [ ] Modbus / Socket 連線狀態監控與手動觸發測試
+- [x] **三通道即時檢測儀表板 (`ui.views.live_inspection_view`)**
+  - [x] 支援 3 Slot 獨立預覽、實時良率統計卡片、大字卡判定反饋
+- [x] **動態算子任務鏈視覺化工作區 (`ui.views.task_pipeline_view`)**
+  - [x] 支援在畫面上隨意新增、刪除、拖曳調整算子順序
+  - [x] 支援在視窗中即時查看任何算子產出的中間處理影像 (Intermediate Buffers)
+- [x] **歷史紀錄與品質分析看板 (`ui.views.history_view`)**
+  - [x] 查詢歷史檢測紀錄、統計圖表繪製、CSV/Excel 一鍵匯出
+- [x] **通訊設定與 I/O 監控視窗 (`ui.views.communication_view`)**
+  - [x] Modbus / Socket 連線狀態監控與手動觸發測試
 
 ### 階段八：整合測試、效能壓測與打包交付
 - [ ] **全後端單元測試與 TDD 驗證** (維持覆蓋率 >= 80%)

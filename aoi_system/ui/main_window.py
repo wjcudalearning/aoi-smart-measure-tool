@@ -18,10 +18,13 @@ from aoi_system.ui.theme import DARK_INDUSTRIAL_QSS
 from aoi_system.ui.viewmodels.inspection_viewmodel import InspectionViewModel
 from aoi_system.ui.viewmodels.main_viewmodel import MainViewModel
 from aoi_system.ui.views.batch_verify_view import BatchVerifyView
+from aoi_system.ui.views.communication_view import CommunicationView
 from aoi_system.ui.views.corner_view import CornerView
+from aoi_system.ui.views.history_view import HistoryView
 from aoi_system.ui.views.live_inspection_view import LiveInspectionView
 from aoi_system.ui.views.preprocess_view import PreprocessView
 from aoi_system.ui.views.recipe_editor_view import RecipeEditorView
+from aoi_system.ui.views.task_pipeline_view import TaskPipelineView
 
 
 class MainWindow(QMainWindow):
@@ -76,12 +79,18 @@ class MainWindow(QMainWindow):
         self.btn_nav_corner = self._create_nav_button("📐 基準角定位標定", 2)
         self.btn_nav_recipe = self._create_nav_button("📝 檢測配方編輯", 3)
         self.btn_nav_batch = self._create_nav_button("📊 批次多圖走查", 4)
+        self.btn_nav_pipeline = self._create_nav_button("🛠️ 算子管線編排", 5)
+        self.btn_nav_history = self._create_nav_button("📈 歷程與品質分析", 6)
+        self.btn_nav_comm = self._create_nav_button("🌐 工業通訊與IO", 7)
 
         sidebar_layout.addWidget(self.btn_nav_live)
         sidebar_layout.addWidget(self.btn_nav_preprocess)
         sidebar_layout.addWidget(self.btn_nav_corner)
         sidebar_layout.addWidget(self.btn_nav_recipe)
         sidebar_layout.addWidget(self.btn_nav_batch)
+        sidebar_layout.addWidget(self.btn_nav_pipeline)
+        sidebar_layout.addWidget(self.btn_nav_history)
+        sidebar_layout.addWidget(self.btn_nav_comm)
         sidebar_layout.addStretch()
 
         # Role & User info at bottom of sidebar
@@ -135,12 +144,18 @@ class MainWindow(QMainWindow):
         self.view_corner = CornerView(self.main_vm)
         self.view_recipe = RecipeEditorView(self.main_vm)
         self.view_batch = BatchVerifyView(self.main_vm)
+        self.view_pipeline = TaskPipelineView()
+        self.view_history = HistoryView()
+        self.view_comm = CommunicationView()
 
         self.stack.addWidget(self.view_live)  # Index 0
         self.stack.addWidget(self.view_preprocess)  # Index 1
         self.stack.addWidget(self.view_corner)  # Index 2
         self.stack.addWidget(self.view_recipe)  # Index 3
         self.stack.addWidget(self.view_batch)  # Index 4
+        self.stack.addWidget(self.view_pipeline)  # Index 5
+        self.stack.addWidget(self.view_history)  # Index 6
+        self.stack.addWidget(self.view_comm)  # Index 7
 
         content_layout.addWidget(self.stack, stretch=1)
         root_layout.addWidget(content_container, stretch=1)

@@ -14,6 +14,9 @@ class TaskPipelineRunner:
     def remove_task(self, task_id: str) -> None:
         self.tasks = [t for t in self.tasks if t.task_id != task_id]
 
+    def clear_tasks(self) -> None:
+        self.tasks.clear()
+
     def execute(self, ctx: InspectionContext) -> list[TaskResult]:
         """Executes all enabled tasks sequentially against the shared context."""
         results: list[TaskResult] = []
