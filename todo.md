@@ -132,13 +132,13 @@ aoi_system/
   - [x] 統一排程軟體觸發、相機硬體 IO 觸發與 PLC 網路觸發
 
 ### 階段五：生產歷程資料庫與統計分析後端 (`storage.database`)
-- [ ] **SQLite 非同步儲存後端 (`storage.database.sqlite_db.SqliteInspectionDatabase`)**
-  - [ ] 建立工件檢測歷程資料表（時間戳記、產品型號、判定結果、各尺寸數值、圖檔路徑）
-  - [ ] 實作非同步寫入佇列，保證高頻檢測下磁碟 I/O 零阻塞
-- [ ] **品質統計與製程能力分析服務 (`storage.database.analytics.QualityAnalyticsService`)**
-  - [ ] 計算即時良率 (Yield)、CPK、PPK、標準差與尺寸分佈長條圖
-- [ ] **多格式報表匯出引擎 (`storage.exporter.ReportExporter`)**
-  - [ ] 支援檢測記錄自訂欄位匯出為 CSV 與 Excel 格式
+- [x] **SQLite 非同步儲存後端 (`storage.database.sqlite_db.SqliteInspectionDatabase`)**
+  - [x] 建立工件檢測歷程資料表（時間戳記、產品型號、判定結果、各尺寸數值、圖檔路徑）
+  - [x] 實作非同步寫入佇列，保證高頻檢測下磁碟 I/O 零阻塞
+- [x] **品質統計與製程能力分析服務 (`storage.database.analytics.QualityAnalyticsService`)**
+  - [x] 計算即時良率 (Yield ordinances)、CPK、PPK、標準差與尺寸分佈長條圖
+- [x] **多格式報表匯出引擎 (`storage.exporter.ReportExporter`)**
+  - [x] 支援檢測記錄自訂欄位匯出為 CSV 與 Excel 格式
 
 ### 階段六：標準視覺算子庫 (Pluggable Vision Operators)
 - [ ] **影像前處理算子 (`pipeline.tasks.PreprocessTask`)**
